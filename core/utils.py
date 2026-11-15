@@ -25,26 +25,47 @@ def format_result(result):
     return new_result
 
 
+def normalize_url(line):
+    # accept full URLs as-is and bare hosts (example.com, sub.example.com[:port][/path])
+    # by assuming https, so -i wordlists and httprobe output both work
+    line = line.strip()
+    if not line or line.startswith('#'):
+        return None
+    if line.startswith(('http://', 'https://')):
+        return line
+    if ' ' in line or '://' in line:
+        return None
+    return 'https://' + line
+
+
+def _read_lines(lines):
+    urls = []
+    for line in lines:
+        url = normalize_url(line)
+        if url:
+            urls.append(url)
+    return urls
+
+
 def create_url_list(target_url, inp_file):
     urls = []
     if inp_file:
         with open(inp_file, 'r') as file:
-            for line in file:
-                if line.startswith(('http://', 'https://')):
-                    urls.append(line.rstrip('\n'))
-    if target_url and target_url.startswith(('http://', 'https://')):
-        urls.append(target_url)
+            urls.extend(_read_lines(file))
+    if target_url:
+        target = normalize_url(target_url)
+        if target:
+            urls.append(target)
     return urls
 
-def create_stdin_list(target_url, inp_file):
-    urls = []
-    if inp_file:
-        for line in inp_file.readlines():
-            if line.startswith(('http://', 'https://')):
-                urls.append(line.rstrip('\n'))
-    if target_url and target_url.startswith(('http://', 'https://')):
-        urls.append(target_url)
-    return urls
+
+def create_stdin_list(stdin):
+    return _read_lines(stdin)
+
+
+def dedupe(urls):
+    # preserve order, drop duplicates
+    return list(dict.fromkeys(urls))
 
 def prompt(default=None):
     editor = 'nano'
