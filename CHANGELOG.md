@@ -1,10 +1,10 @@
 #### 1.1.0 (fork)
-- Fixed findings corrupting each other under multithreading (shared template dict)
-- Fixed `-i`/`-u` being ignored when stdin is not a TTY (CI/cron/subprocess)
-- Added request timeouts (`--timeout`); fixed `TooManyRedirects` never being caught
-- Fixed database path breaking when Corsy is imported or run as a module
-- Added `--proxy` (Burp etc.), `--fail-on-finding` (CI), `-V/--version`
-- Accept bare hostnames and skip blank/comment lines in input
+- Fixed findings overwriting each other when scanned in parallel (shared template record)
+- Fixed `-i`/`-u` being ignored when stdin is not a TTY (CI, cron, subprocesses)
+- Fixed failed requests looking like clean hosts: only a refused connection printed anything; added `--timeout`
+- Fixed the checks database path, which broke when Corsy is imported rather than run as a script
+- Added `--proxy`, `--fail-on-finding`, `-V/--version`
+- Accept bare hostnames and skip blank/comment lines in input files
 - Added a pytest suite and GitHub Actions CI
 
 #### 0.2-beta
