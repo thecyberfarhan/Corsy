@@ -25,6 +25,16 @@ is sent, or trusts `null`, lets any website read responses meant for logged-in u
 the known ways a CORS allow-list gets bypassed and tells you which one the target falls for. This
 fork keeps that, and fixes the parts that gave wrong or missing answers in real use.
 
+## What this shows
+
+- Web and API testing: CORS misconfiguration is a standard part of an API assessment, and this is
+  a tool I actually run for it.
+- Finding a real concurrency bug by testing under load, not just reading the code: the fix for
+  threaded scans corrupting each other's findings was reproduced before it was fixed. See
+  [What changed](#what-changed).
+- Noticing when a tool's own output can't be trusted (a failed request looked identical to a clean
+  host) and fixing the gap instead of only adding features.
+
 ## Requirements
 
 - Python 3.10 or newer (CI runs 3.10, 3.12 and 3.13; also run by hand on 3.14)
